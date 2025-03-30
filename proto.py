@@ -1,4 +1,4 @@
-#We used Copilot to help us make the bats follow the player, simplify long functions, and swith screens
+#We used Copilot to help us make the bats follow the player, simplify long functions, music, and swith screens
 
 import pygame
 import random
@@ -106,21 +106,48 @@ BAT_WAKE_UP_MAX_TIME = 3
 
 platforms = [(136, 454, 278, 20)]
 
+# Music setup
+MUSIC_PATH = "BACKR00MS INSTRUMENTAL (Playboi Carti Ft. Travis Scott).mp3"
+
 def start_page():
+    background_screenshot = pygame.image.load("Background\\screenshot 1.png").convert()
+
     font_large = pygame.font.Font(None, 74)
     font_medium = pygame.font.Font(None, 50)
     title_text = font_large.render("Survivor Game", True, (255, 255, 255))
     play_text = font_medium.render("Play", True, (0, 0, 0))
-    play_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2, 200, 60)
-    
-    welcome_background = pygame.image.load("welcome.jpg").convert()
-    
+    play_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 100, 200, 60) 
+
+    guide_image = pygame.image.load("Character/Guide/Agis.png").convert_alpha()
+    guide_image = pygame.transform.scale(guide_image, (150, 150))
+
     while True:
-        screen.blit(welcome_background, (0, 0))
-        screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 3))
+
+        screen.blit(background_screenshot, (0, 0))
+
+       
+        screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 50))
+
+        guide_x, guide_y = WIDTH // 2 - 75, HEIGHT // 2 - 100
+        screen.blit(guide_image, (guide_x, guide_y))
+        GREY = (211, 211, 211)
+        oval_rect = pygame.Rect(WIDTH // 2 - 200, HEIGHT // 2, 400, 200)
+        pygame.draw.ellipse(screen, GREY, oval_rect)
+        font_size = pygame.font.Font(None, 28)
+        guide_text = font_size.render("For a million years, our clan has", True, BLACK)
+        guide_text2 = font_size.render("had a tradition to pass this trial", True, BLACK)
+        guide_text3 = font_size.render("and become a true samurai.", True, BLACK)
+        guide_text4 = font_size.render("Try if you DARE!", True, BLACK)
+        screen.blit(guide_text, (WIDTH // 2 - guide_text.get_width() // 2, HEIGHT // 2 + 50))
+        screen.blit(guide_text2, (WIDTH // 2 - guide_text2.get_width() // 2, HEIGHT // 2 + 70))
+        screen.blit(guide_text3, (WIDTH // 2 - guide_text3.get_width() // 2, HEIGHT // 2 + 90))
+        screen.blit(guide_text4, (WIDTH // 2 - guide_text4.get_width() // 2, HEIGHT // 2 + 120))
+
+        
         pygame.draw.rect(screen, (255, 255, 255), play_button)
         pygame.draw.rect(screen, (0, 0, 0), play_button, 3)
         screen.blit(play_text, (play_button.x + play_button.width // 2 - play_text.get_width() // 2, play_button.y + 10))
+
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -128,10 +155,19 @@ def start_page():
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button.collidepoint(event.pos):
+                    pygame.mixer.music.load(MUSIC_PATH)
+                    pygame.mixer.music.set_volume(0.5)
+                    pygame.mixer.music.play(-1)
                     return
 
 def you_win_page():
     font_large = pygame.font.Font(None, 74)
+    font_medium = pygame.font.Font(None, 50)
+    text = font_large.render("You have Become a Samurai!", True, (0, 255, 0))
+    play_again_text = font_medium.render("Press R to Play Again", True, (255, 255, 255))
+    screen.fill((0, 0, 0))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 3))
+    screen.blit(play_again_text, (WIDTH // 2 - play_again_text.get_width() // 2, HEIGHT // 2))
     pygame.display.flip()
     while True:
         for event in pygame.event.get():
@@ -180,6 +216,7 @@ wave_started = False
 
 background_image = pygame.image.load("Background\\back.png").convert()
 kills = 0
+
 
 while True:
     screen.blit(background_image, (0, 150))
@@ -352,7 +389,7 @@ while True:
             wave_number += 1
             kills = 0
         else:
-            you_win_page()
+            you_win_page()  
             wave_number = 1
             player_health = 100
             bats.clear()
